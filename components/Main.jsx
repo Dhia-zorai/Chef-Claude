@@ -30,6 +30,7 @@ export default function Main() {
 
   const [recipe, setRecipe] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const recipeSection = React.useRef(null);
 
   async function getRecipe() {
     setRecipe("");
@@ -46,6 +47,12 @@ export default function Main() {
     setIngredients((prevIngredients) => [...prevIngredients, newIngredient]);
   }
 
+  React.useEffect(() => {
+    if (recipe && recipeSection.current) {
+      recipeSection.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [recipe]);
+
   return (
     <main>
       <form action={handleSubmit} className="addIng">
@@ -59,7 +66,11 @@ export default function Main() {
         <button>+ Add Ingredient</button>
       </form>
       {ingredients.length > 0 && (
-        <IngredientsList ingredients={ingredients} onClick={getRecipe} />
+        <IngredientsList
+          ref={recipeSection}
+          ingredients={ingredients}
+          onClick={getRecipe}
+        />
       )}
 
       {loading && <p aria-live="polite">Generating your recipe...</p>}
